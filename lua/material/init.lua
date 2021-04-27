@@ -30,7 +30,6 @@ function material.load(options)
 
     vim.o.background = 'dark'
     vim.o.termguicolors = true
-    vim.g.colors_name = 'material'
 
     local theme = require('material.theme')
     theme.terminal()

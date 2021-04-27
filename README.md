@@ -59,6 +59,9 @@ Enable the colorscheme:
 
 ```lua
 -- Load the colorscheme
+require('material').load()
+
+-- Or with your own options
 require('material').load {
     borders = false, -- Enable the border between verticaly split windows visable
     contrast = true, -- Make sidebars and popup menus like nvim-tree and telescope have a different background
@@ -70,6 +73,21 @@ require('material').load {
     style = 'deep ocean', -- The theme comes in five styles, 'darker', 'lighter', 'palenight', 'oceanic' and 'deep ocean'
 }
 ```
+
+## Override the theme
+
+```lua
+-- Load the theme before requiring the colors otherwise it won't work
+require('material').load {
+    ...
+}
+
+-- For the available colors see the code
+local colors = require('material.colors').get()
+vim.cmd(string.format('highlight Normal guibg=%s guifg=%s', colors.bg, colors.fg))
+```
+
+## Lualine
 
 To enable the `material-nvim` theme for `Lualine`, simply specify it in your
 lualine settings: (make sure to set the theme to 'material-nvim', as
