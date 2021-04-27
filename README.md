@@ -1,21 +1,19 @@
-# 🌊 material.nvim
-A port or [Material](https://material-theme.site) colorscheme for NeoVim written in lua
+# material.nvim
 
-Theme is inspired by https://github.com/kaicataldo/material.vim
+A port or [Material](https://material-theme.site) colorscheme for NeoVim
+written in lua.
+
+Theme is inspired by https://github.com/kaicataldo/material.vim.
 
 ![screen](/media/Material.png)
 
-## 🔱 Info
+## Features
 
-This is the lua branch that doesn't rely on colorbuddy.nvim anymore
-If you want the version that uses colorbuddy.nvim, you can find it [here](https://github.com/marko-cerovac/material.nvim/tree/colorbuddy)
+material.nvim is meant to be a modern colorscheme written in lua for NeoVim
+that supports a lot of the new features added to NeoVim like built-in LSP and
+[TreeSitter](https://github.com/nvim-treesitter/nvim-treesitter).
 
-## ✨ Features
-
-material.nvim is meant to be a modern colorscheme written in lua for NeoVim that supports a lot of the new features
-added to NeoVim like built-in LSP and [TreeSitter](https://github.com/nvim-treesitter/nvim-treesitter)
-
-+ 6 styles to choose from
++ 5 styles to choose from
     + Deep ocean ![screen](/media/deep-ocean.png)
     + Oceanic ![screen](/media/oceanic.png)
     + Palenight ![screen](/media/palenight.png)
@@ -42,157 +40,48 @@ added to NeoVim like built-in LSP and [TreeSitter](https://github.com/nvim-trees
     + [Neogit](https://github.com/TimUntersberger/neogit)
     + [vim-sneak](https://github.com/justinmk/vim-sneak)
 
-+ Added functions for live theme switching without the need to restart NeoVim
-
-## ⚡️ Requirements
+## Requirements
 
 + Neovim >= 0.5.0
 
-## ⚓ Installation
+## Installation
 
 Install via your favourite package manager:
-```vim
-" If you are using Vim-Plug
-Plug 'marko-cerovac/material.nvim'
-```
 
 ```lua
 -- If you are using Packer
-use 'marko-cerovac/material.nvim'
+use { 'scthijsse/material.nvim' }
 ```
 
-## 🐬 Usage
+## Usage
 
 Enable the colorscheme:
-```vim 
-"Vim-Script:
-colorscheme material
-```
 
 ```lua
---Lua:
-require('material').set()
+-- Load the colorscheme
+require('material').load {
+    borders = false, -- Enable the border between verticaly split windows visable
+    contrast = true, -- Make sidebars and popup menus like nvim-tree and telescope have a different background
+    disable_background = false, -- Disable the setting of background color so that NeoVim can use your terminal background
+    italic_comments = true, -- Make comments italic
+    italic_functions = true, -- Make functions italic
+    italic_keywords = true, -- Make keywords italic
+    italic_variables = false, -- Make variables and identifiers italic
+    style = 'deep ocean', -- The theme comes in five styles, 'darker', 'lighter', 'palenight', 'oceanic' and 'deep ocean'
+}
 ```
 
-To enable the `material-nvim` theme for `Lualine`, simply specify it in your lualine settings:
-( make sure to set the theme to 'material-nvim', as 'material' already exists built in to lualine)
+To enable the `material-nvim` theme for `Lualine`, simply specify it in your
+lualine settings: (make sure to set the theme to 'material-nvim', as
+'material' already exists built in to lualine).
 
 ```lua
 require('lualine').setup {
   options = {
-    -- ... your lualine config
-    theme = 'material-nvim'
-    -- ... your lualine config
-  }
+    ...
+    theme = 'material-nvim',
+    ...
+  },
 }
 ```
 
-## ⚙️ Configuration
-
-+ There are 5 different styles available:
-    + darker
-    + lighter
-    + oceanic
-    + palenight
-    + deep ocean
-
-Set the desired style using:
-```vim 
-"Vim-Script:
-let g:material_style = 'darker'
-```
-
-```lua
---Lua:
-vim.g.material_style = "deep ocean"
-```
-
-| Option                              | Default     | Description                                                                                                                                                     |
-| ----------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| material_style                      | `"oceanic"` | The theme comes in five styles, 'darker', 'lighter', 'palenight', 'oceanic' and 'deep ocean'
-| material_italic_comments            | `false`     | Make comments italic                                                                                                                                            |
-| material_italic_keywords            | `false`     | Make keywords italic                                                                                                                                            |
-| material_italic_functions           | `false`     | Make functions italic                                                                                                                                           |
-| material_italic_variables           | `false`     | Make variables and identifiers italic                                                                                                                           |
-| material_contrast                   | `true`      | Make sidebars and popup menus like nvim-tree and telescope have a different background                                                                                       |
-| material_borders                    | `false`     | Enable the border between verticaly split windows visable
-| material_disable_background         | `false`     | Disable the setting of background color so that NeoVim can use your terminal background
-
-```lua
--- Example config in lua
-vim.g.material_style = 'deep ocean'         
-vim.g.material_italic_comments = true
-vim.g.material_italic_keywords = true
-vim.g.material_italic_functions = true
-vim.g.material_italic_variables = false
-vim.g.material_contrast = true
-vim.g.material_borders = false 
-vim.g.material_disable_background = false
-
--- Load the colorscheme
-require('material').set()
-```
-
-```vim
-" Example config in Vim-Script
-let g:material_style = 'deep ocean'         
-let g:material_italic_comments = true
-let g:material_italic_keywords = true
-let g:material_italic_functions = true
-let g:material_italic_variables = false
-let g:material_contrast = true
-let g:material_borders = false 
-let g:material_disable_background = false
-
--- Load the colorsheme
-colorscheme material
-```
-
-## ⛵ Functions
-
-+ Toggle the style live without the need to exit NeoVim
-
-![screen](/media/toggle_style.gif)
-
-Just call the function for style switching
-```vim
-"Vim-Script
-:lua require('material.functions').toggle_style()
-"This command toggles the style
-```
-
-The command can also be mapped to a key for fast style switching
-```vim
-"Vim-Script:
-nnoremap <C-m> :lua require('material.functions').toggle_style()<CR>
-```
-
-```lua
---Lua:
-vim.api.nvim_set_keymap('n', '<C-m>', [[<Cmd>lua require('material.functions').toggle_style()<CR>]], { noremap = true, silent = true })
-```
-
-
-+ Change the style to a desired one using the function change_style("desired style")
-```vim
-"Vim-Script:
-:lua require('material.functions').change_style("palenight")
-"This command changes the style to palenight
-```
-
-The command can also be mapped to a key for fast style switching
-```vim
-"Vim-Script:
-nnoremap <C-9> :lua require('material.functions').change_style('lighter')<CR>
-nnoremap <C-0> :lua require('material.functions').change_style('darker')<CR>
-```
-
-```lua
---Lua:
-vim.api.nvim_set_keymap('n', '<C-9>', [[<Cmd>lua require('material.functions').change_style('lighter')<CR>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-0>', [[<Cmd>lua require('material.functions').change_style('darker')<CR>]], { noremap = true, silent = true })
-```
-
-## ⚠️ Importaint note: 
-The functions do not play well with lualine.
-I'm currently working on fixing this, but until I do, lualine will not look right after a call to these functions

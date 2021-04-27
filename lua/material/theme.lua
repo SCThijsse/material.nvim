@@ -1,426 +1,396 @@
-local material = require("material.colors")
+local config = require('material.config')
+local colors = require('material.colors').get()
 
 local theme = {}
 
-theme.loadSyntax = function ()
+function theme.syntax()
     -- Syntax highlight groups
+    local syntax = {
+        Type =                                 { fg = colors.purple }, -- int, long, char, etc.
+        StorageClass =                         { fg = colors.cyan }, -- static, register, volatile, etc.
+        Structure =                            { fg = colors.puple }, -- struct, union, enum, etc.
+        Constant =                             { fg = colors.yellow }, -- any constant
+        String =                               { fg = colors.green, bg = colors.none, style= 'italic' }, -- Any string
+        Character =                            { fg = colors.orange }, -- any character constant: 'c', '\n'
+        Number =                               { fg = colors.orange }, -- a number constant: 5
+        Boolean =                              { fg = colors.orange }, -- a boolean constant: TRUE, false
+        Float =                                { fg = colors.orange }, -- a floating point constant: 2.3e10
+        Statement =                            { fg = colors.pink }, -- any statement
+        Label =                                { fg = colors.purple }, -- case, default, etc.
+        Operator =                             { fg = colors.cyan }, -- sizeof', '+', '*', etc.
+        Exception =                            { fg = colors.cyan }, -- try, catch, throw
+        PreProc =                              { fg = colors.purple }, -- generic Preprocessor
+        Include =                              { fg = colors.blue }, -- preprocessor #include
+        Define =                               { fg = colors.pink }, -- preprocessor #define
+        Macro =                                { fg = colors.cyan }, -- same as Define
+        Typedef =                              { fg = colors.red }, -- A typedef
+        PreCondit =                            { fg = colors.cyan }, -- preprocessor #if, #else, #endif, etc.
+        Special =                              { fg = colors.red }, -- any special symbol
+        SpecialChar =                          { fg = colors.pink }, -- special character in a constant
+        Tag =                                  { fg = colors.red }, -- you can use CTRL-] on this
+        Delimiter =                            { fg = colors.cyan }, -- character that needs attention like , or .
+        SpecialComment =                       { fg = colors.gray }, -- special things inside a comment
+        Debug =                                { fg = colors.red }, -- debugging statements
+        Underlined =                           { fg = colors.link, bg = colors.none, style = 'underline' }, -- text that stands out, HTML links
+        Ignore =                               { fg = colors.disabled }, -- left blank, hidden
+        Error =                                { fg = colors.error, bg = colors.none, style = 'bold,underline' }, -- any erroneous construct
+        Todo =                                 { fg = colors.yellow, bg = colors.none, style = 'bold,italic' }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+        Comment =                              { fg = colors.comments }, -- normal comments
+        Conditional =                          { fg = colors.purple }, -- normal if, then, else, endif, switch, etc.
+        Keyword =                              { fg = colors.purple }, -- normal for, do, while, etc.
+        Repeat =                               { fg = colors.purple }, -- normal any other keyword
+        Function =                             { fg = colors.blue }, -- normal function names
+        Identifier =                           { fg = colors.gray }, -- any variable name
 
-	local syntax = {
-		Type =						{ fg = material.purple }, -- int, long, char, etc.
-		StorageClass =				{ fg = material.cyan }, -- static, register, volatile, etc.
-		Structure =					{ fg = material.puple }, -- struct, union, enum, etc.
-		Constant =					{ fg = material.yellow }, -- any constant
-		String =					{ fg = material.green, bg = material.none, style= 'italic' }, -- Any string
-		Character =					{ fg = material.orange }, -- any character constant: 'c', '\n'
-		Number =					{ fg = material.orange }, -- a number constant: 5
-		Boolean =					{ fg = material.orange }, -- a boolean constant: TRUE, false
-		Float =						{ fg = material.orange }, -- a floating point constant: 2.3e10
-		Statement =					{ fg = material.pink }, -- any statement
-		Label =						{ fg = material.purple }, -- case, default, etc.
-		Operator =					{ fg = material.cyan }, -- sizeof", "+", "*", etc.
-		Exception =					{ fg = material.cyan }, -- try, catch, throw
-		PreProc =					{ fg = material.purple }, -- generic Preprocessor
-		Include =					{ fg = material.blue }, -- preprocessor #include
-		Define =					{ fg = material.pink }, -- preprocessor #define
-		Macro =						{ fg = material.cyan }, -- same as Define
-		Typedef =					{ fg = material.red }, -- A typedef
-		PreCondit =					{ fg = material.cyan }, -- preprocessor #if, #else, #endif, etc.
-		Special =					{ fg = material.red }, -- any special symbol
-		SpecialChar =				{ fg = material.pink }, -- special character in a constant
-		Tag =						{ fg = material.red }, -- you can use CTRL-] on this
-		Delimiter =					{ fg = material.cyan }, -- character that needs attention like , or .
-		SpecialComment =			{ fg = material.gray }, -- special things inside a comment
-		Debug =						{ fg = material.red }, -- debugging statements
-		Underlined =				{ fg = material.link, bg = material.none, style = 'underline' }, -- text that stands out, HTML links
-		Ignore =					{ fg = material.disabled }, -- left blank, hidden
-		Error =						{ fg = material.error, bg = material.none, style = 'bold,underline' }, -- any erroneous construct
-		Todo =						{ fg = material.yellow, bg = material.none, style = 'bold,italic' }, -- anything that needs extra attention; mostly the keywords TODO FIXME and XXX
+        htmlLink =                             { fg = colors.link, style = 'underline' },
+        htmlH1 =                               { fg = colors.cyan, style = 'bold' },
+        htmlH2 =                               { fg = colors.red, style = 'bold' },
+        htmlH3 =                               { fg = colors.green, style = 'bold' },
+        htmlH4 =                               { fg = colors.yellow, style = 'bold' },
+        htmlH5 =                               { fg = colors.purple, style = 'bold' },
+        markdownH1 =                           { fg = colors.cyan, style = 'bold' },
+        markdownH2 =                           { fg = colors.red, style = 'bold' },
+        markdownH3 =                           { fg = colors.green, style = 'bold' },
+        markdownH1Delimiter =                  { fg = colors.cyan },
+        markdownH2Delimiter =                  { fg = colors.red },
+        markdownH3Delimiter =                  { fg = colors.green },
+    }
 
-        htmlLink = { fg = material.link, style = "underline" },
-        htmlH1 = { fg = material.cyan, style = "bold" },
-        htmlH2 = { fg = material.red, style = "bold" },
-        htmlH3 = { fg = material.green, style = "bold" },
-        htmlH4 = { fg = material.yellow, style = "bold" },
-        htmlH5 = { fg = material.purple, style = "bold" },
-        markdownH1 = { fg = material.cyan, style = "bold" },
-        markdownH2 = { fg = material.red, style = "bold" },
-        markdownH3 = { fg = material.green, style = "bold" },
-        markdownH1Delimiter = { fg = material.cyan },
-        markdownH2Delimiter = { fg = material.red },
-        markdownH3Delimiter = { fg = material.green },
-	}
+    -- Italic comments
+    if config.options.italic_comments == true then
+        syntax.Comment =                       { fg = colors.comments, bg = colors.none, style = 'italic' } -- italic comments
+    end
 
-	-- Options:
+    -- Italic Keywords
+    if config.options.italic_keywords == true then
+        syntax.Conditional =                   { fg = colors.purple, bg = colors.none, style = 'italic' } -- italic if, then, else, endif, switch, etc.
+        syntax.Keyword =                       { fg = colors.purple, bg = colors.none, style = 'italic' } -- italic for, do, while, etc.
+        syntax.Repeat =                        { fg = colors.purple, bg = colors.none, style = 'italic' } -- italic any other keyword
+    end
 
-	-- Italic comments
-	if vim.g.material_italic_comments == true then
-		syntax.Comment =		{fg = material.comments, bg = material.none, style = 'italic'} -- italic comments
-	else
-		syntax.Comment =		{fg = material.comments} -- normal comments
-	end
+    -- Italic Function names
+    if config.options.italic_functions == true then
+        syntax.Function =                      { fg = colors.blue, bg = colors.none, style = 'italic' } -- italic funtion names
+    end
 
-	-- Italic Keywords
-	if vim.g.material_italic_keywords == true then
-		syntax.Conditional =		{fg = material.purple, bg = material.none, style = 'italic'} -- italic if, then, else, endif, switch, etc.
-		syntax.Keyword =			{fg = material.purple, bg = material.none, style = 'italic'} -- italic for, do, while, etc.
-		syntax.Repeat =				{fg = material.purple, bg = material.none, style = 'italic'} -- italic any other keyword
-	else
-		syntax.Conditional =		{fg = material.purple} -- normal if, then, else, endif, switch, etc.
-		syntax.Keyword =			{fg = material.purple} -- normal for, do, while, etc.
-		syntax.Repeat =				{fg = material.purple} -- normal any other keyword
-	end
-
-	-- Italic Function names
-	if vim.g.material_italic_functions == true then
-		syntax.Function =		{fg = material.blue, bg = material.none, style = 'italic'} -- italic funtion names
-	else
-		syntax.Function =		{fg = material.blue} -- normal function names
-	end
-
-	if vim.g.material_italic_variables == true then
-		Identifier =				{fg = material.gray, bg = material.none, style = 'italic'}; -- any variable name
-    else
-		Identifier =				{fg = material.gray}; -- any variable name
+    if config.options.italic_variables == true then
+        syntax.Identifier =                    { fg = colors.gray, bg = colors.none, style = 'italic' } -- any variable name
     end
 
     return syntax
-
 end
 
-
-theme.loadEditor = function ()
+function theme.editor()
     -- Editor highlight groups
-
-	local editor = {
-		NormalFloat =			{ fg = material.fg, bg = material.float }, -- normal text and background color
-		ColorColumn =			{ fg = material.active }, --  used for the columns set with 'colorcolumn'
-		Conceal =				{ fg = material.disabled }, -- placeholder characters substituted for concealed text (see 'conceallevel')
-		Cursor =				{ fg = material.cursor, bg = material.none, style = 'reverse' }, -- the character under the cursor
-		CursorIM =				{ fg = material.cursor, bg = material.none, style = 'reverse' }, -- like Cursor, but used when in IME mode
-		Directory =				{ fg = material.blue, bg = material.none }, -- directory names (and other special names in listings)
-		DiffAdd =				{ fg = material.green, bg = material.none, style = 'reverse' }, -- diff mode: Added line
-		DiffChange =			{ fg = material.orange, bg = material.none, style = 'reverse' }, --  diff mode: Changed line
-		DiffDelete =			{ fg = material.red, bg = material.none, style = 'reverse' }, -- diff mode: Deleted line
-		DiffText =				{ fg = material.yellow, bg = material.none, style = 'reverse' }, -- diff mode: Changed text within a changed line
-		EndOfBuffer =			{ fg = material.disabled },
-		ErrorMsg =				{ fg = material.error },
-		Folded =				{ fg = material.disabled, material.none, style = 'italic' },
-		FoldColumn =			{ fg = material.blue },
-		IncSearch =				{ fg = material.highlight, bg = material.white, style = 'reverse' },
-		LineNr =				{ fg = material.line_numbers },
-		CursorLineNr =			{ fg = material.accent },
-		MatchParen =			{ fg = material.cyan, bg = material.none },
-		ModeMsg =				{ fg = material.accent },
-		MoreMsg =				{ fg = material.accent },
-		NonText =				{ fg = material.disabled },
-		Pmenu =					{ fg = material.text, bg = material.popup },
-		PmenuSel =				{ fg = material.accent, bg = material.active },
-		PmenuSbar =				{ fg = material.text, bg = material.popup },
-		PmenuThumb =			{ fg = material.fg, bg = material.accent },
-		Question =				{ fg = material.green },
-		QuickFixLine =			{ fg = material.highlight, material.white, style = 'reverse' },
-		qfLineNr =				{ fg = material.highlight, material.white, style = 'reverse' },
-		Search =				{ fg = material.highlight, bg = material.white, style = 'reverse' },
-		SpecialKey =			{ fg = material.purple },
-		SpellBad =				{ fg = material.red, bg = material.none, style = 'italic,undercurl' },
-		SpellCap =				{ fg = material.blue, bg = material.none, style = 'italic,undercurl' },
-		SpellLocal =			{ fg = material.cyan, bg = material.none, style = 'italic,undercurl' },
-		SpellRare =				{ fg = material.purple, bg = material.none, style = 'italic,undercurl' },
-		StatusLine =			{ fg = material.fg, bg = material.contrast },
-		StatusLineNC =  		{ fg = material.text, bg = material.disabled },
-		StatusLineTerm =		{ fg = material.fg, bg = material.contrast },
-		StatusLineTermNC =		{ fg = material.text, bg = material.disabled },
-		TabLineFill =			{ fg = material.fg },
-		TablineSel =			{ fg = material.bg, bg = material.accent },
-		Tabline =				{ fg = material.fg },
-		Title =					{ fg = material.green, bg = material.none, style = 'bold' },
-		Visual =				{ fg = material.none, bg = material.selection },
-		VisualNOS =				{ fg = material.none, bg = material.selection },
-		WarningMsg =			{ fg = material.warning },
-		WildMenu =				{ fg = material.orange, bg = material.none, style = 'bold' },
-		CursorColumn =			{ fg = material.none, bg = material.active },
-		CursorLine =			{ fg = material.none, bg = material.active },
-		ToolbarLine =			{ fg = material.fg, bg = material.bg_alt },
-		ToolbarButton =			{ fg = material.fg, bg = material.none, style = 'bold' },
-		NormalMode =			{ fg = material.accent, bg = material.none, style = 'reverse' },
-		InsertMode =			{ fg = material.green, bg = material.none, style = 'reverse' },
-		ReplacelMode =			{ fg = material.red, bg = material.none, style = 'reverse' },
-		VisualMode =			{ fg = material.purple, bg = material.none, style = 'reverse' },
-		CommandMode =			{ fg = material.gray, bg = material.none, style = 'reverse' },
-		Warnings =				{ fg = material.warning },
-
-        healthError =           { fg = material.error },
-        healthSuccess =         { fg = material.green },
-        healthWarning =         { fg = material.warning },
-
-	}
-
-    -- Options:
+    local editor = {
+        NormalFloat =                          { fg = colors.fg, bg = colors.float }, -- normal text and background color
+        Normal =                               { fg = colors.fg, bg = colors.bg }, -- normal text and background color
+        ColorColumn =                          { fg = colors.active }, --  used for the columns set with 'colorcolumn'
+        Conceal =                              { fg = colors.disabled }, -- placeholder characters substituted for concealed text (see 'conceallevel')
+        Cursor =                               { fg = colors.cursor, bg = colors.none, style = 'reverse' }, -- the character under the cursor
+        CursorIM =                             { fg = colors.cursor, bg = colors.none, style = 'reverse' }, -- like Cursor, but used when in IME mode
+        Directory =                            { fg = colors.blue, bg = colors.none }, -- directory names (and other special names in listings)
+        DiffAdd =                              { fg = colors.green, bg = colors.none, style = 'reverse' }, -- diff mode: Added line
+        DiffChange =                           { fg = colors.orange, bg = colors.none, style = 'reverse' }, --  diff mode: Changed line
+        DiffDelete =                           { fg = colors.red, bg = colors.none, style = 'reverse' }, -- diff mode: Deleted line
+        DiffText =                             { fg = colors.yellow, bg = colors.none, style = 'reverse' }, -- diff mode: Changed text within a changed line
+        EndOfBuffer =                          { fg = colors.disabled },
+        ErrorMsg =                             { fg = colors.error },
+        Folded =                               { fg = colors.disabled, colors.none, style = 'italic' },
+        FoldColumn =                           { fg = colors.blue },
+        IncSearch =                            { fg = colors.highlight, bg = colors.white, style = 'reverse' },
+        LineNr =                               { fg = colors.line_numbers },
+        CursorLineNr =                         { fg = colors.accent },
+        SignColumn =                           { fg = colors.fg, bg = colors.bg },
+        SignColumnSb =                         { fg = colors.fg, bg = colors.sidebar },
+        MatchParen =                           { fg = colors.cyan, bg = colors.none },
+        ModeMsg =                              { fg = colors.accent },
+        MoreMsg =                              { fg = colors.accent },
+        NonText =                              { fg = colors.disabled },
+        Pmenu =                                { fg = colors.text, bg = colors.popup },
+        PmenuSel =                             { fg = colors.accent, bg = colors.active },
+        PmenuSbar =                            { fg = colors.text, bg = colors.popup },
+        PmenuThumb =                           { fg = colors.fg, bg = colors.accent },
+        Question =                             { fg = colors.green },
+        QuickFixLine =                         { fg = colors.highlight, colors.white, style = 'reverse' },
+        qfLineNr =                             { fg = colors.highlight, colors.white, style = 'reverse' },
+        Search =                               { fg = colors.highlight, bg = colors.white, style = 'reverse' },
+        SpecialKey =                           { fg = colors.purple },
+        SpellBad =                             { fg = colors.red, bg = colors.none, style = 'italic,undercurl' },
+        SpellCap =                             { fg = colors.blue, bg = colors.none, style = 'italic,undercurl' },
+        SpellLocal =                           { fg = colors.cyan, bg = colors.none, style = 'italic,undercurl' },
+        SpellRare =                            { fg = colors.purple, bg = colors.none, style = 'italic,undercurl' },
+        StatusLine =                           { fg = colors.fg, bg = colors.contrast },
+        StatusLineNC =                         { fg = colors.text, bg = colors.disabled },
+        StatusLineTerm =                       { fg = colors.fg, bg = colors.contrast },
+        StatusLineTermNC =                     { fg = colors.text, bg = colors.disabled },
+        TabLineFill =                          { fg = colors.fg },
+        TablineSel =                           { fg = colors.bg, bg = colors.accent },
+        Tabline =                              { fg = colors.fg },
+        Title =                                { fg = colors.green, bg = colors.none, style = 'bold' },
+        Visual =                               { fg = colors.none, bg = colors.selection },
+        VisualNOS =                            { fg = colors.none, bg = colors.selection },
+        WarningMsg =                           { fg = colors.warning },
+        WildMenu =                             { fg = colors.orange, bg = colors.none, style = 'bold' },
+        CursorColumn =                         { fg = colors.none, bg = colors.active },
+        CursorLine =                           { fg = colors.none, bg = colors.active },
+        ToolbarLine =                          { fg = colors.fg, bg = colors.bg_alt },
+        ToolbarButton =                        { fg = colors.fg, bg = colors.none, style = 'bold' },
+        NormalMode =                           { fg = colors.accent, bg = colors.none, style = 'reverse' },
+        InsertMode =                           { fg = colors.green, bg = colors.none, style = 'reverse' },
+        ReplacelMode =                         { fg = colors.red, bg = colors.none, style = 'reverse' },
+        VisualMode =                           { fg = colors.purple, bg = colors.none, style = 'reverse' },
+        CommandMode =                          { fg = colors.gray, bg = colors.none, style = 'reverse' },
+        VertSplit =                            { fg = colors.bg },
+        Warnings =                             { fg = colors.warning },
+        healthError =                          { fg = colors.error },
+        healthSuccess =                        { fg = colors.green },
+        healthWarning =                        { fg = colors.warning },
+    }
 
     --Set transparent background
-    if vim.g.material_disable_background == true then
-		editor.Normal =				{ fg = material.fg, bg = material.none } -- normal text and background color
-		editor.SignColumn =			{ fg = material.fg, bg = material.none }
-		editor.SignColumnSb =			{ fg = material.fg, bg = material.none }
-    else
-		editor.Normal =				{ fg = material.fg, bg = material.bg } -- normal text and background color
-		editor.SignColumn =			{ fg = material.fg, bg = material.bg }
-		editor.SignColumnSb =			{ fg = material.fg, bg = material.sidebar }
+    if config.options.disable_background == true then
+        editor.Normal =                        { fg = colors.fg, bg = colors.none } -- normal text and background color
+        editor.SignColumn =                    { fg = colors.fg, bg = colors.none }
+        editor.SignColumnSb =                  { fg = colors.fg, bg = colors.none }
     end
 
     -- Remove window split borders
-    if vim.g.material_borders == true then
-		editor.VertSplit =				{ fg = material.border }
-    else
-		editor.VertSplit =				{ fg = material.bg }
+    if config.options.borders == true then
+        editor.VertSplit =                     { fg = colors.border }
     end
 
     return editor
 end
 
-theme.loadTerminal = function ()
-
-	vim.g.terminal_color_0 = material.black
-	vim.g.terminal_color_1 = material.red
-	vim.g.terminal_color_2 = material.green
-	vim.g.terminal_color_3 = material.yellow
-	vim.g.terminal_color_4 = material.blue
-	vim.g.terminal_color_5 = material.purple
-	vim.g.terminal_color_6 = material.cyan
-	vim.g.terminal_color_7 = material.white
-	vim.g.terminal_color_8 = material.gray
-	vim.g.terminal_color_9 = material.red
-	vim.g.terminal_color_10 = material.green
-	vim.g.terminal_color_11 = material.yellow
-	vim.g.terminal_color_12 = material.blue
-	vim.g.terminal_color_13 = material.purple
-	vim.g.terminal_color_14 = material.cyan
-	vim.g.terminal_color_15 = material.white
-
+function theme.terminal()
+    vim.g.terminal_color_0 = colors.black
+    vim.g.terminal_color_1 = colors.red
+    vim.g.terminal_color_2 = colors.green
+    vim.g.terminal_color_3 = colors.yellow
+    vim.g.terminal_color_4 = colors.blue
+    vim.g.terminal_color_5 = colors.purple
+    vim.g.terminal_color_6 = colors.cyan
+    vim.g.terminal_color_7 = colors.white
+    vim.g.terminal_color_8 = colors.gray
+    vim.g.terminal_color_9 = colors.red
+    vim.g.terminal_color_10 = colors.green
+    vim.g.terminal_color_11 = colors.yellow
+    vim.g.terminal_color_12 = colors.blue
+    vim.g.terminal_color_13 = colors.purple
+    vim.g.terminal_color_14 = colors.cyan
+    vim.g.terminal_color_15 = colors.white
 end
 
-theme.loadTreeSitter = function ()
+function theme.treesitter()
     -- TreeSitter highlight groups
-
     local treesitter = {
-        TSAnnotation =              { fg = material.red },    -- For C++/Dart attributes, annotations that can be attached to the code to denote some kind of meta information.
-        TSAttribute =               { fg = material.yellow },    -- (unstable) TODO: docs
-        TSBoolean=                  { fg = material.orange },    -- For booleans.
-        TSCharacter=                { fg = material.orange },    -- For characters.
-        TSConstructor =             { fg = material.purple }, -- For constructor calls and definitions: `= { }` in Lua, and Java constructors.
-        TSConstant =                { fg = material.yellow },    -- For constants
-        TSConstBuiltin =            { fg = material.blue },    -- For constant that are built in the language: `nil` in Lua.
-        TSConstMacro =              { fg = material.blue },    -- For constants that are defined by macros: `NULL` in C.
-        TSError =                   { fg = material.error },    -- For syntax/parser errors.
-        TSException =               { fg = material.yellow },    -- For exception related keywords.
-        TSField =                   { fg = material.gray }, -- For fields.
-        TSFloat =                   { fg = material.red },    -- For floats.
-        TSFuncMacro =               { fg = material.blue },    -- For macro defined fuctions (calls and definitions): each `macro_rules` in Rust.
-        TSInclude =                 { fg = material.cyan },    -- For includes: `#include` in C, `use` or `extern crate` in Rust, or `require` in Lua.
-        TSLabel =                   { fg = material.red }, -- For labels: `label:` in C and `:label:` in Lua.
-        TSNamespace =               { fg = material.yellow },    -- For identifiers referring to modules and namespaces.
-        --TSNone =                    { },    -- TODO: docs
-        TSNumber =                  { fg = material.orange },    -- For all numbers
-        TSOperator =                { fg = material.cyan }, -- For any operator: `+`, but also `->` and `*` in C.
-        TSParameter =               { fg = material.paleblue }, -- For parameters of a function.
-        TSParameterReference=       { fg = material.paleblue },    -- For references to parameters of a function.
-        TSProperty =                { fg = material.paleblue }, -- Same as `TSField`.
-        TSPunctDelimiter =          { fg = material.cyan }, -- For delimiters ie: `.`
-        TSPunctBracket =            { fg = material.cyan }, -- For brackets and parens.
-        TSPunctSpecial =            { fg = material.cyan }, -- For special punctutation that does not fall in the catagories before.
-        TSString =                  { fg = material.green },    -- For strings.
-        TSStringRegex =             { fg = material.blue6 }, -- For regexes.
-        TSStringEscape =            { fg = material.orange }, -- For escape characters within a string.
-        TSSymbol =                  { fg = material.yellow },    -- For identifiers referring to symbols or atoms.
-        TSType =                    { fg = material.purple },    -- For types.
-        TSTypeBuiltin =             { fg = material.purple },    -- For builtin types.
-        TSTag =                     { fg = material.red },    -- Tags like html tag names.
-        TSTagDelimiter =            { fg = material.yellow },    -- Tag delimiter like `<` `>` `/`
-        TSText =                    { fg = material.text },    -- For strings considered text in a markup language.
-        TSTextReference =           { fg = material.yellow }, -- FIXME
-        TSEmphasis =                { fg = material.paleblue },    -- For text to be represented with emphasis.
-        TSUnderline =               { fg = material.fg, bg = material.none, style = 'underline' },    -- For text to be represented with an underline.
-        TSStrike =                  { },    -- For strikethrough text.
-        TSTitle =                   { fg = material.paleblue, bg = material.none, style = 'bold' },    -- Text that is part of a title.
-        TSLiteral =                 { fg = material.fg },    -- Literal text.
-        TSURI =                     { fg = material.link },    -- Any URI like a link or email.
+        TSAnnotation =                         { fg = colors.red }, -- For C++/Dart attributes, annotations that can be attached to the code to denote some kind of meta information.
+        TSAttribute =                          { fg = colors.yellow }, -- (unstable) TODO: docs
+        TSBoolean=                             { fg = colors.orange }, -- For booleans.
+        TSCharacter=                           { fg = colors.orange }, -- For characters.
+        TSConstructor =                        { fg = colors.purple }, -- For constructor calls and definitions: `= { }` in Lua, and Java constructors.
+        TSConstant =                           { fg = colors.yellow }, -- For constants
+        TSConstBuiltin =                       { fg = colors.blue }, -- For constant that are built in the language: `nil` in Lua.
+        TSConstMacro =                         { fg = colors.blue }, -- For constants that are defined by macros: `NULL` in C.
+        TSError =                              { fg = colors.error }, -- For syntax/parser errors.
+        TSException =                          { fg = colors.yellow }, -- For exception related keywords.
+        TSField =                              { fg = colors.gray }, -- For fields.
+        TSFloat =                              { fg = colors.red }, -- For floats.
+        TSFuncMacro =                          { fg = colors.blue }, -- For macro defined fuctions (calls and definitions): each `macro_rules` in Rust.
+        TSInclude =                            { fg = colors.cyan }, -- For includes: `#include` in C, `use` or `extern crate` in Rust, or `require` in Lua.
+        TSLabel =                              { fg = colors.red }, -- For labels: `label:` in C and `:label:` in Lua.
+        TSNamespace =                          { fg = colors.yellow }, -- For identifiers referring to modules and namespaces.
+        --TSNone =                             { }, -- TODO: docs
+        TSNumber =                             { fg = colors.orange }, -- For all numbers
+        TSOperator =                           { fg = colors.cyan }, -- For any operator: `+`, but also `->` and `*` in C.
+        TSParameter =                          { fg = colors.paleblue }, -- For parameters of a function.
+        TSParameterReference=                  { fg = colors.paleblue }, -- For references to parameters of a function.
+        TSProperty =                           { fg = colors.paleblue }, -- Same as `TSField`.
+        TSPunctDelimiter =                     { fg = colors.cyan }, -- For delimiters ie: `.`
+        TSPunctBracket =                       { fg = colors.cyan }, -- For brackets and parens.
+        TSPunctSpecial =                       { fg = colors.cyan }, -- For special punctutation that does not fall in the catagories before.
+        TSString =                             { fg = colors.green },-- For strings.
+        TSStringRegex =                        { fg = colors.blue6 }, -- For regexes.
+        TSStringEscape =                       { fg = colors.orange }, -- For escape characters within a string.
+        TSSymbol =                             { fg = colors.yellow }, -- For identifiers referring to symbols or atoms.
+        TSType =                               { fg = colors.purple }, -- For types.
+        TSTypeBuiltin =                        { fg = colors.purple }, -- For builtin types.
+        TSTag =                                { fg = colors.red }, -- Tags like html tag names.
+        TSTagDelimiter =                       { fg = colors.yellow },-- Tag delimiter like `<` `>` `/`
+        TSText =                               { fg = colors.text }, -- For strings considered text in a markup language.
+        TSTextReference =                      { fg = colors.yellow }, -- FIXME
+        TSEmphasis =                           { fg = colors.paleblue }, -- For text to be represented with emphasis.
+        TSUnderline =                          { fg = colors.fg, bg = colors.none, style = 'underline' }, -- For text to be represented with an underline.
+        -- TSStrike =                          { }, -- For strikethrough text.
+        TSTitle =                              { fg = colors.paleblue, bg = colors.none, style = 'bold' }, -- Text that is part of a title.
+        TSLiteral =                            { fg = colors.fg }, -- Literal text.
+        TSURI =                                { fg = colors.link }, -- Any URI like a link or email.
+
+        TSComment =                            { fg = colors.comments }, -- For comment blocks.
+        TSConditional =                        { fg = colors.purple }, -- For keywords related to conditionnals.
+        TSKeyword =                            { fg = colors.purple }, -- For keywords that don't fall in previous categories.
+        TSRepeat =                             { fg = colors.purple }, -- For keywords related to loops.
+        TSKeywordFunction =                    { fg = colors.purple }, -- For keywords used to define a fuction.
+        TSFunction =                           { fg = colors.blue }, -- For fuction (calls and definitions).
+        TSMethod =                             { fg = colors.blue }, -- For method calls and definitions.
+        TSFuncBuiltin =                        { fg = colors.cyan }, -- For builtin functions: `table.insert` in Lua.
+        TSVariable =                           { fg = colors.gray }, -- Any variable name that does not have another highlight.
+        TSVariableBuiltin =                    { fg = colors.gray }, -- Variable names that are defined by the languages, like `this` or `self`.
     }
 
-    -- Options:
-
     -- Italic comments
-    if vim.g.material_italic_comments == true then
-        treesitter.TSComment=                  { fg = material.comments , bg = material.none, style = 'italic' }    -- For comment blocks.
-    else
-        treesitter.TSComment=                  { fg = material.comments }    -- For comment blocks.
+    if config.options.italic_comments == true then
+        treesitter.TSComment =                 { fg = colors.comments , bg = colors.none, style = 'italic' } -- For comment blocks.
     end
 
-    if vim.g.material_italic_keywords == true then
-        treesitter.TSConditional =             { fg = material.purple, style = 'italic' }    -- For keywords related to conditionnals.
-        treesitter.TSKeyword =                 { fg = material.purple, style = 'italic' } -- For keywords that don't fall in previous categories.
-        treesitter.TSRepeat =                  { fg = material.purple, style = 'italic' }    -- For keywords related to loops.
-        treesitter.TSKeywordFunction =         { fg = material.purple, style = 'italic' } -- For keywords used to define a fuction.
-    else
-        treesitter.TSConditional =             { fg = material.purple }    -- For keywords related to conditionnals.
-        treesitter.TSKeyword =                 { fg = material.purple } -- For keywords that don't fall in previous categories.
-        treesitter.TSRepeat =                  { fg = material.purple }    -- For keywords related to loops.
-        treesitter.TSKeywordFunction =         { fg = material.purple } -- For keywords used to define a fuction.
+    if config.options.italic_keywords == true then
+        treesitter.TSConditional =             { fg = colors.purple, style = 'italic' } -- For keywords related to conditionnals.
+        treesitter.TSKeyword =                 { fg = colors.purple, style = 'italic' } -- For keywords that don't fall in previous categories.
+        treesitter.TSRepeat =                  { fg = colors.purple, style = 'italic' } -- For keywords related to loops.
+        treesitter.TSKeywordFunction =         { fg = colors.purple, style = 'italic' } -- For keywords used to define a fuction.
     end
 
-    if vim.g.material_italic_functions == true then
-        treesitter.TSFunction =                { fg = material.blue, style = 'italic' }    -- For fuction (calls and definitions).
-        treesitter.TSMethod =                  { fg = material.blue, style = 'italic' }    -- For method calls and definitions.
-        treesitter.TSFuncBuiltin =             { fg = material.cyan, style = 'italic' }    -- For builtin functions: `table.insert` in Lua.
-    else
-        treesitter.TSFunction =                { fg = material.blue }    -- For fuction (calls and definitions).
-        treesitter.TSMethod =                  { fg = material.blue }    -- For method calls and definitions.
-        treesitter.TSFuncBuiltin =             { fg = material.cyan }    -- For builtin functions: `table.insert` in Lua.
+    if config.options.italic_functions == true then
+        treesitter.TSFunction =                { fg = colors.blue, style = 'italic' } -- For fuction (calls and definitions).
+        treesitter.TSMethod =                  { fg = colors.blue, style = 'italic' } -- For method calls and definitions.
+        treesitter.TSFuncBuiltin =             { fg = colors.cyan, style = 'italic' } -- For builtin functions: `table.insert` in Lua.
     end
 
-    if vim.g.material_italic_variables == true then
-        treesitter.TSVariable =                { fg = material.gray, style = 'italic' } -- Any variable name that does not have another highlight.
-        treesitter.TSVariableBuiltin =         { fg = material.gray, style = 'italic' } -- Variable names that are defined by the languages, like `this` or `self`.
-    else
-        treesitter.TSVariable =                { fg = material.gray } -- Any variable name that does not have another highlight.
-        treesitter.TSVariableBuiltin =         { fg = material.gray } -- Variable names that are defined by the languages, like `this` or `self`.
+    if config.options.italic_variables == true then
+        treesitter.TSVariable =                { fg = colors.gray, style = 'italic' } -- Any variable name that does not have another highlight.
+        treesitter.TSVariableBuiltin =         { fg = colors.gray, style = 'italic' } -- Variable names that are defined by the languages, like `this` or `self`.
     end
 
     return treesitter
-
 end
 
-theme.loadLSP = function ()
+function theme.lsp()
     -- Lsp highlight groups
-
-    local lsp = {
-        LspDiagnosticsDefaultError =            { fg = material.error }, -- used for "Error" diagnostic virtual text
-        LspDiagnosticsSignError =               { fg = material.error }, -- used for "Error" diagnostic signs in sign column
-        LspDiagnosticsFloatingError =           { fg = material.error }, -- used for "Error" diagnostic messages in the diagnostics float
-        LspDiagnosticsVirtualTextError =        { fg = material.error }, -- Virtual text "Error"
-        LspDiagnosticsUnderlineError =          { style = 'undercurl', sp = material.error }, -- used to underline "Error" diagnostics.
-        LspDiagnosticsDefaultWarning =          { fg = material.warning}, -- used for "Warning" diagnostic signs in sign column
-        LspDiagnosticsSignWarning =             { fg = material.warning}, -- used for "Warning" diagnostic signs in sign column
-        LspDiagnosticsFloatingWarning =         { fg = material.warning}, -- used for "Warning" diagnostic messages in the diagnostics float
-        LspDiagnosticsVirtualTextWarning =      { fg = material.warning}, -- Virtual text "Warning"
-        LspDiagnosticsUnderlineWarning =        { style = 'undercurl', sp = material.warning }, -- used to underline "Warning" diagnostics.
-        LSPDiagnosticsDefaultInformation =      { fg = material.paleblue }, -- used for "Information" diagnostic virtual text
-        LspDiagnosticsSignInformation =         { fg = material.paleblue },  -- used for "Information" diagnostic signs in sign column
-        LspDiagnosticsFloatingInformation =     { fg = material.paleblue }, -- used for "Information" diagnostic messages in the diagnostics float
-        LspDiagnosticsVirtualTextInformation =  { fg = material.paleblue }, -- Virtual text "Information"
-        LspDiagnosticsUnderlineInformation =    { style = 'undercurl', sp = material.paleblue }, -- used to underline "Information" diagnostics.
-        LspDiagnosticsDefaultHint =             { fg = material.purple  },  -- used for "Hint" diagnostic virtual text
-        LspDiagnosticsSignHint =                { fg = material.purple  }, -- used for "Hint" diagnostic signs in sign column
-        LspDiagnosticsFloatingHint =            { fg = material.purple  }, -- used for "Hint" diagnostic messages in the diagnostics float
-        LspDiagnosticsVirtualTextHint =         { fg = material.purple  }, -- Virtual text "Hint"
-        LspDiagnosticsUnderlineHint =           { style = 'undercurl', sp = material.paleblue }, -- used to underline "Hint" diagnostics.
-        LspReferenceText =                      { fg = material.accent, bg = material.highlight }, -- used for highlighting "text" references
-        LspReferenceRead =                      { fg = material.accent, bg = material.highlight }, -- used for highlighting "read" references
-        LspReferenceWrite =                     { fg = material.accent, bg = material.highlight }, -- used for highlighting "write" references
+    return {
+        LspDiagnosticsDefaultError =           { fg = colors.error }, -- used for 'Error' diagnostic virtual text
+        LspDiagnosticsSignError =              { fg = colors.error }, -- used for 'Error' diagnostic signs in sign column
+        LspDiagnosticsFloatingError =          { fg = colors.error }, -- used for 'Error' diagnostic messages in the diagnostics float
+        LspDiagnosticsVirtualTextError =       { fg = colors.error }, -- Virtual text 'Error'
+        LspDiagnosticsUnderlineError =         { style = 'undercurl', sp = colors.error }, -- used to underline 'Error' diagnostics.
+        LspDiagnosticsDefaultWarning =         { fg = colors.warning}, -- used for 'Warning' diagnostic signs in sign column
+        LspDiagnosticsSignWarning =            { fg = colors.warning}, -- used for 'Warning' diagnostic signs in sign column
+        LspDiagnosticsFloatingWarning =        { fg = colors.warning}, -- used for 'Warning' diagnostic messages in the diagnostics float
+        LspDiagnosticsVirtualTextWarning =     { fg = colors.warning}, -- Virtual text 'Warning'
+        LspDiagnosticsUnderlineWarning =       { style = 'undercurl', sp = colors.warning }, -- used to underline 'Warning' diagnostics.
+        LSPDiagnosticsDefaultInformation =     { fg = colors.paleblue }, -- used for 'Information' diagnostic virtual text
+        LspDiagnosticsSignInformation =        { fg = colors.paleblue },  -- used for 'Information' diagnostic signs in sign column
+        LspDiagnosticsFloatingInformation =    { fg = colors.paleblue }, -- used for 'Information' diagnostic messages in the diagnostics float
+        LspDiagnosticsVirtualTextInformation = { fg = colors.paleblue }, -- Virtual text 'Information'
+        LspDiagnosticsUnderlineInformation =   { style = 'undercurl', sp = colors.paleblue }, -- used to underline 'Information' diagnostics.
+        LspDiagnosticsDefaultHint =            { fg = colors.purple  },  -- used for 'Hint' diagnostic virtual text
+        LspDiagnosticsSignHint =               { fg = colors.purple  }, -- used for 'Hint' diagnostic signs in sign column
+        LspDiagnosticsFloatingHint =           { fg = colors.purple  }, -- used for 'Hint' diagnostic messages in the diagnostics float
+        LspDiagnosticsVirtualTextHint =        { fg = colors.purple  }, -- Virtual text 'Hint'
+        LspDiagnosticsUnderlineHint =          { style = 'undercurl', sp = colors.paleblue }, -- used to underline 'Hint' diagnostics.
+        LspReferenceText =                     { fg = colors.accent, bg = colors.highlight }, -- used for highlighting 'text' references
+        LspReferenceRead =                     { fg = colors.accent, bg = colors.highlight }, -- used for highlighting 'read' references
+        LspReferenceWrite =                    { fg = colors.accent, bg = colors.highlight }, -- used for highlighting 'write' references
     }
-
-    return lsp
-
 end
 
-theme.loadPlugins = function()
+function theme.plugins()
     -- Plugins highlight groups
-
     local plugins = {
 
         -- LspTrouble
-        LspTroubleText =                        { fg = material.text },
-        LspTroubleCount =                       { fg = material.purple, bg = material.active },
-        LspTroubleNormal =                      { fg = material.fg, bg = material.bg_alt },
+        LspTroubleText =                       { fg = colors.text },
+        LspTroubleCount =                      { fg = colors.purple, bg = colors.active },
+        LspTroubleNormal =                     { fg = colors.fg, bg = colors.bg_alt },
 
         -- Diff
-        diffAdded =                             { fg = material.green },
-        diffRemoved =                           { fg = material.red },
-        diffChanged =                           { fg = material.yellow },
-        diffOldFile =                           { fg = material.yelow },
-        diffNewFile =                           { fg = material.orange },
-        diffFile =                              { fg = material.blue },
-        diffLine =                              { fg = material.comments },
-        diffIndexLine =                         { fg = material.purple },
+        diffAdded =                            { fg = colors.green },
+        diffRemoved =                          { fg = colors.red },
+        diffChanged =                          { fg = colors.yellow },
+        diffOldFile =                          { fg = colors.yelow },
+        diffNewFile =                          { fg = colors.orange },
+        diffFile =                             { fg = colors.blue },
+        diffLine =                             { fg = colors.comments },
+        diffIndexLine =                        { fg = colors.purple },
 
         -- Neogit
-        NeogitBranch =                          { fg = material.paleblue },
-        NeogitRemote =                          { fg = material.purple },
-        NeogitHunkHeader =                      { fg = material.fg, bg = material.highlight },
-        NeogitHunkHeaderHighlight =             { fg = material.blue, bg = material.contrast },
-        NeogitDiffContextHighlight =            { fg = material.bg_alt, bg = material.contrast },
-        NeogitDiffDeleteHighlight =             { fg = material.red },
-        NeogitDiffAddHighlight =                { fg = material.green },
+        NeogitBranch =                         { fg = colors.paleblue },
+        NeogitRemote =                         { fg = colors.purple },
+        NeogitHunkHeader =                     { fg = colors.fg, bg = colors.highlight },
+        NeogitHunkHeaderHighlight =            { fg = colors.blue, bg = colors.contrast },
+        NeogitDiffContextHighlight =           { fg = colors.bg_alt, bg = colors.contrast },
+        NeogitDiffDeleteHighlight =            { fg = colors.red },
+        NeogitDiffAddHighlight =               { fg = colors.green },
 
         -- GitGutter
-        GitGutterAdd =                          { fg = material.green }, -- diff mode: Added line |diff.txt|
-        GitGutterChange =                       { fg = material.yellow }, -- diff mode: Changed line |diff.txt|
-        GitGutterDelete =                       { fg = material.red }, -- diff mode: Deleted line |diff.txt|
+        GitGutterAdd =                         { fg = colors.green }, -- diff mode: Added line |diff.txt|
+        GitGutterChange =                      { fg = colors.yellow }, -- diff mode: Changed line |diff.txt|
+        GitGutterDelete =                      { fg = colors.red }, -- diff mode: Deleted line |diff.txt|
 
         -- GitSigns
-        GitSignsAdd =                           { fg = material.green }, -- diff mode: Added line |diff.txt|
-        GitSignsAddNr =                         { fg = material.green }, -- diff mode: Added line |diff.txt|
-        GitSignsAddLn =                         { fg = material.green }, -- diff mode: Added line |diff.txt|
-        GitSignsChange =                        { fg = material.yellow }, -- diff mode: Changed line |diff.txt|
-        GitSignsChangeNr =                      { fg = material.yellow }, -- diff mode: Changed line |diff.txt|
-        GitSignsChangeLn =                      { fg = material.yellow }, -- diff mode: Changed line |diff.txt|
-        GitSignsDelete =                        { fg = material.red }, -- diff mode: Deleted line |diff.txt|
-        GitSignsDeleteNr =                      { fg = material.red }, -- diff mode: Deleted line |diff.txt|
-        GitSignsDeleteLn =                      { fg = material.red }, -- diff mode: Deleted line |diff.txt|
+        GitSignsAdd =                          { fg = colors.green }, -- diff mode: Added line |diff.txt|
+        GitSignsAddNr =                        { fg = colors.green }, -- diff mode: Added line |diff.txt|
+        GitSignsAddLn =                        { fg = colors.green }, -- diff mode: Added line |diff.txt|
+        GitSignsChange =                       { fg = colors.yellow }, -- diff mode: Changed line |diff.txt|
+        GitSignsChangeNr =                     { fg = colors.yellow }, -- diff mode: Changed line |diff.txt|
+        GitSignsChangeLn =                     { fg = colors.yellow }, -- diff mode: Changed line |diff.txt|
+        GitSignsDelete =                       { fg = colors.red }, -- diff mode: Deleted line |diff.txt|
+        GitSignsDeleteNr =                     { fg = colors.red }, -- diff mode: Deleted line |diff.txt|
+        GitSignsDeleteLn =                     { fg = colors.red }, -- diff mode: Deleted line |diff.txt|
 
         -- Telescope
-        TelescopeBorder =                       { fg = material.border },
+        TelescopeBorder =                      { fg = colors.border },
 
         -- NvimTree
-        NvimTreeRootFolder =                    { fg = material.blue, style = "bold" },
-        NvimTreeGitDirty =                      { fg = material.yellow },
-        NvimTreeGitNew =                        { fg = material.green },
-        NvimTreeImageFile =                     { fg = material.yellow },
-        NvimTreeExecFile =                      { fg = material.green },
-        NvimTreeSpecialFile =                   { fg = material.purple , style = "underline" },
-        NvimTreeFolderName=                     { fg = material.paleblue },
-        NvimTreeEmptyFolderName=                { fg = material.disabled },
-        NvimTreeFolderIcon=                     { fg = material.accent },
-        NvimTreeIndentMarker =                  { fg  = material.border },
-        LspDiagnosticsError =                   { fg = material.error },
-        LspDiagnosticsWarning =                 { fg = material.warning },
-        LspDiagnosticsInformation =             { fg = material.paleblue },
-        LspDiagnosticsHint =                    { fg = material.purple },
+        NvimTreeNormal =                       { fg = colors.fg, bg = colors.sidebar },
+        NvimTreeRootFolder =                   { fg = colors.blue, style = 'bold' },
+        NvimTreeGitDirty =                     { fg = colors.yellow },
+        NvimTreeGitNew =                       { fg = colors.green },
+        NvimTreeImageFile =                    { fg = colors.yellow },
+        NvimTreeExecFile =                     { fg = colors.green },
+        NvimTreeSpecialFile =                  { fg = colors.purple , style = 'underline' },
+        NvimTreeFolderName=                    { fg = colors.paleblue },
+        NvimTreeEmptyFolderName=               { fg = colors.disabled },
+        NvimTreeFolderIcon=                    { fg = colors.accent },
+        NvimTreeIndentMarker =                 { fg  = colors.border },
+        LspDiagnosticsError =                  { fg = colors.error },
+        LspDiagnosticsWarning =                { fg = colors.warning },
+        LspDiagnosticsInformation =            { fg = colors.paleblue },
+        LspDiagnosticsHint =                   { fg = colors.purple },
 
         -- Dashboard
-        DashboardShortCut =                     { fg = material.cyan },
-        DashboardHeader =                       { fg = material.accent },
-        DashboardCenter =                       { fg = material.purple },
-        DashboardFooter =                       { fg = material.yellow, style = "italic" },
+        DashboardShortCut =                    { fg = colors.cyan },
+        DashboardHeader =                      { fg = colors.accent },
+        DashboardCenter =                      { fg = colors.purple },
+        DashboardFooter =                      { fg = colors.yellow, style = 'italic' },
 
         -- WhichKey
-        WhichKey =                              { fg = material.fg },
-        WhichKeyGroup =                         { fg = material.accent },
-        WhichKeyDesc =                          { fg = material.purple },
-        WhichKeySeperator =                     { fg = material.paleblue },
-        WhichKeyFloating =                      { bg = material.sidebar },
+        WhichKey =                             { fg = colors.fg },
+        WhichKeyGroup =                        { fg = colors.accent },
+        WhichKeyDesc =                         { fg = colors.purple },
+        WhichKeySeperator =                    { fg = colors.paleblue },
+        WhichKeyFloating =                     { bg = colors.sidebar },
 
         -- LspSaga
-        DiagnosticError =                       { fg = material.error },
-        DiagnosticWarning =                     { fg = material.warning },
-        DiagnosticInformation =                 { fg = material.paleblue },
-        DiagnosticHint =                        { fg = material.purple },
+        DiagnosticError =                      { fg = colors.error },
+        DiagnosticWarning =                    { fg = colors.warning },
+        DiagnosticInformation =                { fg = colors.paleblue },
+        DiagnosticHint =                       { fg = colors.purple },
 
         -- BufferLine
-        BufferLineIndicatorSelected =           { fg = material.accent },
-        BufferLineFill =                        { bg = material.bg_alt },
+        BufferLineIndicatorSelected =          { fg = colors.accent },
+        BufferLineFill =                       { bg = colors.bg_alt },
 
         -- Sneak
-        Sneak =                                 { fg = material.bg, bg = material.accent },
-        SneakScope =                            { bg = material.selection },
+        Sneak =                                { fg = colors.bg, bg = colors.accent },
+        SneakScope =                           { bg = colors.selection },
     }
-        if vim.g.material_disable_background == true then
-            plugins.NvimTreeNormal =                        { fg = material.fg, bg = material.none }
-        else
-            plugins.NvimTreeNormal =                        { fg = material.fg, bg = material.sidebar }
-        end
+
+    if config.options.disable_background == true then
+        plugins.NvimTreeNormal =               { fg = colors.fg, bg = colors.none }
+    end
 
     return plugins
-
 end
 
 return theme
